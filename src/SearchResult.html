@@ -24,7 +24,7 @@
         var url = resultObject.url;
 
         var result = "<li>" +
-                "<span class='result-header'><h3><a href='" + url + "'>" + title + "</a></h3></span><br/>" +
+                "<span data-url='" + url + "' class='result-header' style='cursor: pointer'><h3>" + title + "</h3></span><br/>" +
                 "<span class='result-content'>"+resultObject.content+"</span></li>";
         $('#results').append(result);
     }
@@ -47,6 +47,11 @@
             });
         });
     }
+
+    $(document).on('click', '.result-header', function(e) {
+        e.preventDefault();
+        window.location =  "ResultPage.html?q="+$(this).data('url');
+    });
 
 </script>
 </body>

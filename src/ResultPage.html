@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div id="balaSwecha-bar">
+    <form id="search-form" action="SearchResult.html" method="get">
+        <input type="search" name="query" id="query" title="Search"/>
+        <input type="submit" value="search"/>
+    </form>
+    <hr />
+</div>
+<webview id="foo" style="display:inline-block; position:fixed; top:4%; width:100%; height:90%"></webview>
+<script>
+    window.$ = window.jQuery = require('./jquery.js');
+    var a  = window.location.search.substring(1).split('&')[0].split('=')[1];
+    console.log($(window).width());
+    $('#foo').attr('src',a);
+
+</script>
+</body>
+</html>
