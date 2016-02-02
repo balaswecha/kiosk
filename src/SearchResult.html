@@ -5,11 +5,25 @@
     <title>Search results</title>
 </head>
 <body>
+<div id="balaSwecha-bar">
+    <form id="search-form" action="SearchResult.html" method="get">
+        <input type="search" name="query" id="query" title="Search"/>
+        <input type="submit" value="search"/>
+    </form>
+    <hr/>
+</div>
+<div style="display:inline-block; position:fixed; top:4%; width:100%; height:90%">
+    <ul id="results">
+
+    </ul>
+</div>
 <script>
     window.$ = window.jQuery = require('./jquery.js');
-    var a  = window.location.search.substring(1).split('&')[0].split('=')[1];
+    var a = window.location.search.substring(1).split('&')[0].split('=')[1];
 
-    $(document).ready(function(){search(a)});
+    $(document).ready(function () {
+        search(a)
+    });
 
 
     function searchWebsite(query, site, done) {
@@ -25,7 +39,7 @@
 
         var result = "<li>" +
                 "<span data-url='" + url + "' class='result-header' style='cursor: pointer'><h3>" + title + "</h3></span><br/>" +
-                "<span class='result-content'>"+resultObject.content+"</span></li>";
+                "<span class='result-content'>" + resultObject.content + "</span></li>";
         $('#results').append(result);
     }
 
@@ -36,26 +50,26 @@
     };
 
     function renderResult(medium, results) {
-        results.results.forEach(function(res){renderElement(res)});
+        results.results.forEach(function (res) {
+            renderElement(res)
+        });
     }
 
     function search(query) {
         $.each(media, function (medium, site) {
-            console.log(site,medium);
+            console.log(site, medium);
             searchWebsite(query, site, function (results) {
                 renderResult(medium, results);
             });
         });
     }
 
-    $(document).on('click', '.result-header', function(e) {
+    $(document).on('click', '.result-header', function (e) {
         e.preventDefault();
-        window.location =  "ResultPage.html?q="+$(this).data('url');
+        window.location = "layout.html?q=" + $(this).data('url');
+
     });
 
 </script>
 </body>
-<ul id="results">
-
-</ul>
 </html>

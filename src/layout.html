@@ -17,8 +17,8 @@
     window.$ = window.jQuery = require('./jquery.js');
     var a  = window.location.search.substring(1).split('&')[0].split('=')[1];
     console.log($(window).width());
+    console.log(a);
     $('#foo').attr('src',a);
-
 </script>
 </body>
 </html>
