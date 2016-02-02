@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Search results</title>
+</head>
+<body>
+<script>
+    window.$ = window.jQuery = require('./jquery.js');
+    var a  = window.location.search.substring(1).split('&')[0].split('=')[1];
+
+    $(document).ready(function(){search(a)});
+
+
+    function searchWebsite(query, site, done) {
+        $.getJSON('https://searx.me/', {q: query + ' site:' + site, format: 'json'}).then(function (res) {
+            done(res);
+        });
+    }
+
+
+    function renderElement(resultObject) {
+        var title = resultObject.title;
+        var url = resultObject.url;
+
+        var result = "<li>" +
+                "<span class='result-header'><h3><a href='" + url + "'>" + title + "</a></h3></span><br/>" +
+                "<span class='result-content'>"+resultObject.content+"</span></li>";
+        $('#results').append(result);
+    }
+
+
+    var media = {
+        text: 'en.wikipedia.org',
+        video: 'khanacademy.org'
+    };
+
+    function renderResult(medium, results) {
+        results.results.forEach(function(res){renderElement(res)});
+    }
+
+    function search(query) {
+        $.each(media, function (medium, site) {
+            console.log(site,medium);
+            searchWebsite(query, site, function (results) {
+                renderResult(medium, results);
+            });
+        });
+    }
+
+</script>
+</body>
+<ul id="results">
+
+</ul>
+</html>
