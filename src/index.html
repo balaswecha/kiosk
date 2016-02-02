@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Balaswecha Kiosk</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+</head>
+<body>
+<form id="search-form">
+    <input type="search" name="query" id="query"/>
+    <input type="submit" value="search"/>
+</form>
+<script>
+    window.$ = window.jQuery = require('./jquery.js');
+
+    function searchWebsite(query, site, done) {
+        $.getJSON('https://searx.me/', {q: query + ' site:' + site, format: 'json'}).then(function (res) {
+            done(res);
+        });
+    }
+
+    var media = {
+        text: 'en.wikipedia.org',
+        video: 'khanacademy.org'
+    };
+
+    function renderMedium(medium, results) {
+        console.log(medium, results);
+    }
+
+    function search(query) {
+        $.each(media, function (medium, site) {
+            searchWebsite(query, site, function (results) {
+                renderMedium(medium, results);
+            });
+        });
+    }
+
+    $('#search-form').submit(function (e) {
+        e.preventDefault();
+        var query = $("#query").val();
+        search(query);
+    });
+</script>
+</body>
+</html>
