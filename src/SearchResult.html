@@ -20,10 +20,10 @@
 </div>
 <script>
     window.$ = window.jQuery = require('./jquery.js');
-    var a = window.location.search.substring(1).split('&')[0].split('=')[1];
 
     $(document).ready(function () {
-        search(a)
+        var query = window.location.search.substring(1).split('&')[0].split('=')[1];
+        search(query)
     });
 
 
