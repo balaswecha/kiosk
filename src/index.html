@@ -5,12 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <script src="jquery.js"></script>
     <script src="onscreen.js"></script>
+    <link rel="stylesheet" href="koisk-default.css" />
 </head>
 <body>
-<div class = "home-search">
-    <form id="search-form" action="SearchResult.html" method="get">
-        <input type="search" name="query" id="query" title="Search"/>
-        <input type="submit" value="search"/>
+<div class="home">
+    <p>
+        <img class="logo" src="images/logo.png" alt="Balaswecha Logo" />
+    </p>
+    <form id="search-form" class="search" action="SearchResult.html" method="get">
+        <input class="search__query" placeholder="e.g. newton's laws of motion..." type="search" name="query" id="query" title="Search"/>
+        <input class="search__submit" type="submit" value="Learn!"/>
     </form>
 </div>
 </body>
