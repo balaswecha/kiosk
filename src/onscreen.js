@@ -19,7 +19,7 @@ $(document).ready( function(){
   });
 });
 var invokeOnScreen = function(){
-  spawn('onscreen',[]);
+  spawn('onboard',[]);
 }
 var killOnScreen = function(){
   spawn('kill_onscreen',[]);
