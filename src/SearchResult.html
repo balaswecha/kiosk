@@ -3,17 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <title>Search results</title>
-    <script src="onscreen.js"></script>
+    <script src="main.js"></script>
+    <link rel="stylesheet" href="koisk-default.css" />
 </head>
 <body>
-<div id="balaSwecha-bar">
-    <form id="search-form" action="SearchResult.html" method="get">
-        <input type="search" name="query" id="query" title="Search"/>
-        <input type="submit" value="search"/>
+<div class="topbar">
+    <p><a href="index.html">Back</a></p>
+    <h1 class="logo">Balaswecha</h1>
+    <form id="search-form" class="search" action="SearchResult.html" method="get">
+        <input class="search__query" placeholder="e.g. newton's laws of motion..." type="search" name="query" id="query" title="Search"/>
+        <input class="search__submit" type="submit" value="Learn!"/>
     </form>
-    <hr/>
 </div>
-<div style="display:inline-block; position:fixed; top:4%; width:100%; height:90%">
+<div>
     <ul id="results">
 
     </ul>

@@ -3,23 +3,34 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
-    <script src="onscreen.js"></script>
+    <script src="main.js"></script>
+    <link rel="stylesheet" href="koisk-default.css" />
 </head>
 <body>
-<div id="balaSwecha-bar">
-    <form id="search-form" action="SearchResult.html" method="get">
-        <input type="search" name="query" id="query" title="Search"/>
-        <input type="submit" value="search"/>
+<div class="topbar">
+    <p><a id="back" href="index.html">Back</a></p>
+    <h1 class="logo">Balaswecha</h1>
+    <form id="search-form" class="search" action="SearchResult.html" method="get">
+        <input class="search__query" placeholder="e.g. newton's laws of motion..." type="search" name="query" id="query" title="Search"/>
+        <input class="search__submit" type="submit" value="Learn!"/>
     </form>
-    <hr />
 </div>
-<webview id="foo" style="display:inline-block; position:fixed; top:4%; width:100%; height:90%"></webview>
+<webview id="webview" class="webview"></webview>
 <script>
     window.$ = window.jQuery = require('./jquery.js');
     var a  = window.location.search.substring(1).split('&')[0].split('=')[1];
-    console.log($(window).width());
-    console.log(a);
-    $('#foo').attr('src',a);
+    $('#webview').attr('src',a);
+
+
+    $('#back').click(function(e) {
+        e.preventDefault();
+        var webview = $('#webview').get(0);
+        if(webview.canGoBack()) {
+            webview.goBack();
+        } else {
+            history.back();
+        }
+    });
 </script>
 </body>
 </html>
