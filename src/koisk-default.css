@@ -1,7 +1,6 @@
 @import "normalize.css";
 @import "fonts.css";
 
-
 html {
     font-family: 'Roboto', sans-serif;
 }
@@ -11,12 +10,40 @@ html {
     padding: 0 15px;
     text-align: center;
     height: 100%;
-    margin: 10em auto auto;
+    margin: 10rem auto auto;
 }
 
 .home .logo {
     width: 40%;
-    margin-bottom: 5em;
+    margin-bottom: 5rem;
+}
+
+a {
+    color: #00aade;
+    text-decoration: none;
+}
+
+a:hover {
+    color: #f7941e;
+}
+
+.btn {
+    background-color: #00aade;
+    color: #fff;
+    border-radius: 5px;
+    padding: .5rem;
+    font-size: 1.5rem;
+    border: #00aade 1px solid;
+}
+
+.btn--back {
+    background-color: transparent;
+    border: none;
+    color: #f7941e;
+}
+
+.btn--search {
+    border-radius: 0 5px 5px 0;
 }
 
 .search {
@@ -25,34 +52,39 @@ html {
 }
 
 .search .search__query {
-    border-radius: 5px 0 0 5px;
-    padding: .5em;
+    padding: 1rem;
     border: #999 1px solid;
-    font-size: 1.5em;
+    border-radius: 5px 0 0 5px;
+    font-size: 1.5rem;
     flex-grow: 1;
-}
-
-.search .search__submit {
-    background-color: #00aade;
-    color: #fff;
-    border-radius: 0 5px 5px 0;
-    padding: .5em;
-    font-size: 1.5em;
-    border: #00aade 1px solid;
 }
 
 .topbar {
     display: flex;
     justify-content: space-between;
     background-color: #eee;
-    padding: 1em;
+    align-items: center;
+    padding: 1rem;
+    flex-wrap: wrap;
+    border-bottom: #ddd 1px solid;
 }
 
-.topbar .logo {
+.topbar .topbar__back {
+    margin: 0;
+    width: 400px;
+}
+
+.topbar .topbar__logo {
     background: url('images/logo.png') no-repeat;
     color: transparent;
     background-size: contain;
     width: 200px;
+    height: 63px;
+    margin: 0;
+}
+
+.topbar__search {
+    width: 400px;
 }
 
 .webview {
