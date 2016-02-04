@@ -17,7 +17,10 @@ function getInstantAnswer(query) {
             })
             .then(function (res) {
                 if (res.AbstractText) {
-                    $('#instant-answer-container').text(res.AbstractText);
+                    var container = $('#instant-answer');
+                    container.find('.instant-answer__description').text(res.AbstractText);
+                    container.find('.instant-answer__image img').attr('src', res.Image);
+                    container.show();
                 }
             });
 }
