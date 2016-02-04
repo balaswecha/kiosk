@@ -92,5 +92,17 @@ a:hover {
 }
 
 #instant-answer {
-    display: none;
+    display: flex;
+    border: 2px #999 dashed;
+    padding: 0 1em;
+    margin-bottom: 1em;
+    background-color: #f6f6f6;
+}
+
+#instant-answer .instant-answer__image {
+    margin-right: 1em;
+}
+
+.hidden {
+    display: none !important;
 }

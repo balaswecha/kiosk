@@ -20,7 +20,8 @@ function getInstantAnswer(query) {
                     var container = $('#instant-answer');
                     container.find('.instant-answer__description').text(res.AbstractText);
                     container.find('.instant-answer__image img').attr('src', res.Image);
-                    container.show();
+                    container.find('.instant-answer__readmore').attr('href', res.AbstractURL).data('url', res.AbstractURL);
+                    container.removeClass('hidden');
                 }
             });
 }
@@ -107,8 +108,7 @@ function search(query) {
     });
 }
 
-$(document).on('click', '.result-header', function (e) {
+$(document).on('click', '.instant-answer__readmore, .result-header', function (e) {
     e.preventDefault();
     window.location = "layout.html?q=" + $(this).data('url');
-
 });
