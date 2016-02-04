@@ -5,6 +5,10 @@ html {
     font-family: 'Roboto', sans-serif;
 }
 
+* {
+    line-height: 1.5em;
+}
+
 .home {
     max-width: 830px;
     padding: 0 15px;
