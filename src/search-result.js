@@ -112,3 +112,23 @@ $(document).on('click', '.instant-answer__readmore, .result-header', function (e
     e.preventDefault();
     window.location = "layout.html?q=" + $(this).data('url');
 });
+
+$(document).on('click', '.result-stream-right-nav', function(e) {
+    e.preventDefault();
+    var resultStream = $(this).siblings('.result-stream');
+    var totalWidth = resultStream.get(0).scrollWidth;
+    var boxWidth = 200;
+    var actualWidth = resultStream.width();
+
+    var visibleNumberOfBoxes = Math.floor(actualWidth / boxWidth);
+    var numberOfBoxesAlreadyScrolled = Math.floor(resultStream.scrollLeft() / boxWidth);
+
+    var scrollWidth = (numberOfBoxesAlreadyScrolled + visibleNumberOfBoxes) * boxWidth;
+
+    // Cycle if already scrolled to the last
+    if(totalWidth - resultStream.scrollLeft() <= actualWidth) {
+        scrollWidth = 0;
+    }
+
+    resultStream.animate({ scrollLeft: scrollWidth }, 1000);
+});

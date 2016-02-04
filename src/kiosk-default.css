@@ -123,7 +123,6 @@ a:hover {
     display: none !important;
 }
 
-
 .results {
     max-width: 80%;
     margin: 1rem auto 0 auto;
@@ -135,53 +134,68 @@ a:hover {
 .result-container__header__img {
     height: 1.5rem;
     float: left;
-    padding: 0 .5em;
+    padding: 0 .5em 0 0;
 }
 
+.result-stream-container {
+    position: relative;
+}
 .result-stream {
-    overflow-x: scroll;
     display: flex;
+    overflow-x: hidden;
+}
+.result-stream-right-nav {
+    display: block;
+    color: #666;
+    font-size: 3em;
+    position: absolute;
+    right: 0;
+    top: 0;
+    height: 100%;
+    padding: 45px 20px 0 20px;
+    box-sizing: border-box;
+    background: linear-gradient(to right, rgba(255,0,0,0), #ccc);
+    cursor: pointer;
 }
 
 .result-block {
     display: inline;
     min-width: 200px;
-    height:81%;
+    max-width: 200px;
     overflow-wrap: normal;
     float: left;
-    margin:1%;
     background-color: #f8f8f8;
-    padding:10px;
+    padding: 0 1rem;
 }
 
-.result-container-header-text{
+.result-container-header-text {
     display: inline;
-    padding:6px;
+    padding: 6px;
 }
 
-.result-img{
-    width:50px;
-    height:50px;
+.result-img {
+    width: 50px;
+    height: 50px;
     display: inline;
     float: left;
     margin-right: .5em;
 }
 
-.result-description{
-    display:block;
+.result-description {
+    display: block;
     font-size: small;
 }
 
-.result-link{
+.result-link {
     text-decoration: none;
-    color:black;
+    color: black;
 }
 
-.result-link:hover{
+.result-link:hover {
     text-decoration: underline;
 }
 
-.video-result-img{
-    width:150px;
-    height:100px;
+.video-result-img {
+    width: 150px;
+    height: 100px;
 }
