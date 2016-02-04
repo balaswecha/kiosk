@@ -7,13 +7,13 @@ $(document).ready(function () {
 
 
 function searchWebsite(query, site, done) {
-    $.getJSON('https://searx.me/', {q: query + ' site:' + site, format: 'json'}).then(function (res) {
+    $.getJSON('https://searx.me/', {q: query + ' site:' + site, format: 'json',category:mediaKey(site)}).then(function (res) {
         done(res);
     });
 }
 
 
-var media = [{type:'text',sites: ['en.wikipedia.org']},{type:'video', sites: ['khanacademy.org']}];
+var media = [{type:'text',sites: ['en.wikipedia.org']},{type:'videos', sites: ['khanacademy.org']}];
 
 function mediaKey(site2find){
     return media.filter(function(medium) {
@@ -22,10 +22,10 @@ function mediaKey(site2find){
 }
 
 var renderTextElement = function (res) {
-    var textElement ="<div class='text-result-block'>"+
-            "<a href='"+res.url+"'>"+
-            "<img class = 'text-result-img' src=''/>"+
-            "<span class='text-result-description'>"+res.content+"</span>"+
+    var textElement ="<div class='result-block'>"+
+            "<a class='result-link' href='"+res.url+"'>"+
+            "<img class = 'result-img' src=''/>"+
+            "<span class='result-description'>"+res.content+"</span>"+
             "</a>"+
     "</div>";
     $('#text-result-stream').append(textElement);
@@ -33,10 +33,10 @@ var renderTextElement = function (res) {
 
 
 var renderVideoElement = function (res) {
-    var textElement ="<div class='video-result-block'>"+
-            "<a href='"+res.url+"'>"+
-            "<img class = 'video-result-img'src='"+"a"+"'/>"+
-            "<span class='video-result-description'>"+res.content+"</span>"+
+    var textElement ="<div class='result-block'>"+
+            "<a class='result-link' href='"+res.url+"'>"+
+            "<img class = 'video-result-img'src=''/>"+
+            "<span class='result-description'>"+res.title+"</span>"+
             "</a>"+
     "</div>";
     $('#video-result-stream').append(textElement);
@@ -68,7 +68,7 @@ function renderResult(results) {
         case 'text':
             renderTextResult(results);
             break;
-        case 'video':
+        case 'videos':
             renderVideoResult(results);
             break;
     }
