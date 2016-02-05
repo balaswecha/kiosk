@@ -193,6 +193,8 @@ a:hover {
     max-width: 200px;
     float: left;
     padding: 0 1rem;
+    margin-right:20px;
+    border:1px solid #ddd;
 }
 
 .result-container-header-text {
@@ -213,6 +215,7 @@ a:hover {
     color: black;
     font-size: small;
     line-height: 135%;
+    padding:5px 5px 15px 5px;
 }
 
 .result-link {
@@ -237,7 +240,9 @@ a:hover {
     font-weight: bold;
     display:block;
     line-height: 135%;
-    padding-bottom: 10px;
+    padding-top: 10px;
+    padding-right: 5px;
+    padding-left: 5px;
 }
 .restricted-search{
     color:red;
