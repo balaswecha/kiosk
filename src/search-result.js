@@ -2,7 +2,7 @@ window.$ = window.jQuery = require('./jquery.js');
 
 var checkForBanWord = function (query) {
     return query.split("+").filter(function(chunk) {
-            return banlist.hasOwnProperty(chunk)
+            return banlist.hasOwnProperty(chunk.toLowerCase())
         }).length>0;
 };
 
