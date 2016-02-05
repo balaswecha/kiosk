@@ -29,6 +29,7 @@ $(document).ready(function () {
     }
     getInstantAnswer(query);
     search(query);
+    videoSearch(query);
 });
 
 function getInstantAnswer(query) {
@@ -66,11 +67,28 @@ function searchForMedium(query, medium, done) {
     });
 }
 
+function searchYouTube(query, channel, done) {
+    $.getJSON('https://www.googleapis.com/youtube/v3/search', {
+        part: "snippet",
+        channelId: channel,
+        q: query,
+        safeSearch: "strict",
+        key: "AIzaSyBQuBZQy0X_0g-D5bH5MC8Rg2bocnoLolI",
+    }).then(function (res) {
+        done(res);
+    });
+}
 
 var media = [{
     type: 'text',
-    sites: ['en.wikipedia.org', 'open.ac.uk', 'oercommons.org','ck12.org']
-}, {type: 'videos', sites: ['khanacademy.org']}];
+    sites: ['en.wikipedia.org', 'open.ac.uk', 'oercommons.org','ck12.org', 'howstuffworks.com']
+  }];
+var videoChannel = [
+    "UCT7EcU7rC44DiS3RkfZzZMg", // AravindGupta
+    "UC4a-Gbdw7vOaccHmFo40b9g", // KhanAcademy
+    "UCT0s92hGjqLX6p7qY9BBrSA", // NCERT
+    "UCFe6jenM1Bc54qtBsIJGRZQ" // PatrickMT
+    ];
 
 function mediaKey(site2find) {
     return media.filter(function (medium) {
@@ -80,8 +98,8 @@ function mediaKey(site2find) {
 
 var renderTextElement = function (res) {
     var textElement = "<div class='result-block'>" +
-            "<a class='result-link' href='layout.html?q=" + res.url + "'>" +
-            "<span class='result-title'>" + res.title + "</span>" +
+            "<a class='result-link' href='layout.html?src=" + res.url + "'>" +
+            "<span class='result-title'>"+res.title+"</span>"+
             "<span class='result-description'>" + res.content + "</span>" +
             "</a>" +
             "</div>";
@@ -91,13 +109,18 @@ var renderTextElement = function (res) {
 
 var renderVideoElement = function (res) {
     var textElement = "<div class='result-block'>" +
-            "<a class='result-link' href='layout.html?q=" + res.url + "'>" +
-            "<img class = 'video-result-img'src='images/video-player.png'/>" +
-            "<span class='result-description'>" + res.title + "</span>" +
+            "<a class='result-link video-link' data-id='" + res.id.videoId + "' href='#'>" +
+            "<img class = 'video-result-img'src='"+res.snippet.thumbnails.medium.url+"'/>" +
+            "<span class='result-description'>" + res.snippet.title + "</span>" +
             "</a>" +
             "</div>";
     $('#video-result-stream').append(textElement);
 };
+
+$(document).on('click', '.video-link', function(e) {
+    e.preventDefault();
+    showVideo($(this).data('id'));
+});
 
 function renderTextResult(results) {
 
@@ -109,7 +132,7 @@ function renderTextResult(results) {
 
 function renderVideoResult(results) {
 
-    results.results.forEach(function (res) {
+    results.items.forEach(function (res) {
         renderVideoElement(res);
     });
     $('#video-loading').addClass('hidden');
@@ -137,6 +160,14 @@ function search(query) {
         searchForMedium(query, medium, function (res) {
             renderResult(res);
         })
+    });
+}
+
+function videoSearch(query) {
+    videoChannel.forEach(function (channel) {
+        searchYouTube(query, channel, function (res) {
+            renderVideoResult(res);
+        });
     });
 }
 
@@ -181,3 +212,21 @@ function scrollStream(resultStream, direction) {
         rightNav.show();
     }
 }
+function showVideo(videoId) {
+    $('#video').attr('src', 'https://www.youtube.com/embed/' + videoId + '?autoplay=1');
+    showModal();
+}
+function showModal() {
+    $('#modal-backdrop').show();
+}
+$(function() {
+    $('#modal-backdrop').click(function(e){
+        hideModal();
+    });
+    $('#modal').click(function(e){
+     e.stopPropagation();
+     });
+    function hideModal() {
+        $('#modal-backdrop').fadeOut();
+    }
+});

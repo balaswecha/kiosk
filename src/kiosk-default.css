@@ -40,6 +40,7 @@ a {
 
 a:hover {
     color: #f7941e;
+    text-decoration: none;
 }
 
 .btn {
@@ -55,6 +56,9 @@ a:hover {
     background-color: transparent;
     border: none;
     color: #f7941e;
+}
+.btn--back:hover {
+    color: #DC8011;
 }
 
 .btn--search {
@@ -206,6 +210,7 @@ a:hover {
 
 .result-description {
     display: block;
+    color: black;
     font-size: small;
     line-height: 135%;
 }
@@ -213,10 +218,6 @@ a:hover {
 .result-link {
     text-decoration: none;
     color: black;
-}
-
-.result-link:hover {
-    text-decoration: underline;
 }
 
 .video-result-img {
@@ -240,4 +241,19 @@ a:hover {
 }
 .restricted-search{
     color:red;
+}
+
+#modal-backdrop {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0, .8);
+    z-index: 100;
+    top: 0;
+    display: none;
+    text-align: center;
+}
+#modal {
+    max-width: 700px;
+    margin: 200px auto 0 auto;
 }
