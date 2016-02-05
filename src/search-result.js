@@ -113,9 +113,16 @@ $(document).on('click', '.instant-answer__readmore, .result-header', function (e
     window.location = "layout.html?q=" + $(this).data('url');
 });
 
-$(document).on('click', '.result-stream-right-nav', function(e) {
+$(document).on('click', '.result-stream-nav__right', function (e) {
     e.preventDefault();
-    var resultStream = $(this).siblings('.result-stream');
+    scrollStream($(this).siblings('.result-stream'), 'right');
+});
+$(document).on('click', '.result-stream-nav__left', function (e) {
+    e.preventDefault();
+    scrollStream($(this).siblings('.result-stream'), 'left');
+});
+
+function scrollStream(resultStream, direction) {
     var totalWidth = resultStream.get(0).scrollWidth;
     var boxWidth = 200;
     var actualWidth = resultStream.width();
@@ -123,13 +130,22 @@ $(document).on('click', '.result-stream-right-nav', function(e) {
     var visibleNumberOfBoxes = Math.floor(actualWidth / boxWidth);
     var numberOfBoxesAlreadyScrolled = Math.floor(resultStream.scrollLeft() / boxWidth);
 
-    var scrollWidth = (numberOfBoxesAlreadyScrolled + visibleNumberOfBoxes) * boxWidth;
+    var numberOfBoxesToScroll = ((direction == 'left') ? -1 : 1) * visibleNumberOfBoxes;
 
-    // Cycle if already scrolled to the last
-    if(totalWidth - resultStream.scrollLeft() <= actualWidth) {
-        console.log('here');
-        scrollWidth = 0;
+    var scrollWidth = (numberOfBoxesAlreadyScrolled + numberOfBoxesToScroll) * boxWidth;
+
+    resultStream.animate({scrollLeft: scrollWidth}, 1000);
+
+    var leftNav = resultStream.siblings('.result-stream-nav__left');
+    if (scrollWidth <= 10) {
+        leftNav.hide();
+    } else {
+        leftNav.show();
     }
-
-    resultStream.animate({ scrollLeft: scrollWidth }, 1000);
-});
+    var rightNav = resultStream.siblings('.result-stream-nav__right');
+    if (totalWidth - scrollWidth - actualWidth <= 10 /* buffer */) {
+        rightNav.hide();
+    } else {
+        rightNav.show();
+    }
+}

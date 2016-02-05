@@ -144,27 +144,41 @@ a:hover {
     display: flex;
     overflow-x: hidden;
 }
-.result-stream-right-nav {
+.result-stream-nav {
     display: block;
     color: #666;
     font-size: 3em;
     position: absolute;
-    right: 0;
     top: 0;
     height: 100%;
     padding: 45px 20px 0 20px;
     box-sizing: border-box;
-    background: linear-gradient(to right, rgba(255,0,0,0), #ccc);
     cursor: pointer;
     opacity: .8;
 }
-.result-stream-right-nav:hover {
-    opacity: 1;
-    background: linear-gradient(to right, rgba(255,0,0,0), #aaa);
+.result-stream-nav.result-stream-nav__right {
+    right: 0;
+    background: linear-gradient(to right, rgba(255,0,0,0), #ccc);
+}
+.result-stream-nav.result-stream-nav__right:hover {
+    background: linear-gradient(to right, rgba(255, 0, 0, 0), #aaa);
+}
+.result-stream-nav.result-stream-nav__left {
+    display: none;
+    left: 0;
+    background: linear-gradient(to left, rgba(255,0,0,0), #ccc);
+}
+.result-stream-nav.result-stream-nav__left:hover {
+    background: linear-gradient(to left, rgba(255, 0, 0, 0), #aaa);
+}
+.result-stream-nav:active {
+    color: #333;
+}
+.result-stream-nav.result-stream-nav__left:active {
+    padding-left: 15px;
 }
 
-.result-stream-right-nav:active {
-    color: #333;
+.result-stream-nav.result-stream-nav__right:active {
     padding-right: 15px;
 }
 
