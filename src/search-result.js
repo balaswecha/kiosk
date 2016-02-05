@@ -127,6 +127,7 @@ $(document).on('click', '.result-stream-right-nav', function(e) {
 
     // Cycle if already scrolled to the last
     if(totalWidth - resultStream.scrollLeft() <= actualWidth) {
+        console.log('here');
         scrollWidth = 0;
     }
 

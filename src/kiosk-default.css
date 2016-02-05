@@ -156,6 +156,16 @@ a:hover {
     box-sizing: border-box;
     background: linear-gradient(to right, rgba(255,0,0,0), #ccc);
     cursor: pointer;
+    opacity: .8;
+}
+.result-stream-right-nav:hover {
+    opacity: 1;
+    background: linear-gradient(to right, rgba(255,0,0,0), #aaa);
+}
+
+.result-stream-right-nav:active {
+    color: #333;
+    padding-right: 15px;
 }
 
 .result-block {
