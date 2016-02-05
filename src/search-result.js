@@ -51,11 +51,16 @@ function getInstantAnswer(query) {
             });
 }
 
-function searchWebsite(query, site, done) {
+function searchForMedium(query, medium, done) {
+    var siteQuery='';
+    var count=1;
+    medium.sites.forEach(function(site){
+        siteQuery+='site:'+site + (count==medium.sites.length?'':' OR ');
+        count++;
+    });
     $.getJSON('https://searx.me/', {
-        q: query + ' site:' + site,
-        format: 'json',
-        category: mediaKey(site)
+        q: query  +' '+ siteQuery,
+        format: 'json'
     }).then(function (res) {
         done(res);
     });
@@ -64,7 +69,7 @@ function searchWebsite(query, site, done) {
 
 var media = [{
     type: 'text',
-    sites: ['www.ck12.org', 'en.wikipedia.org', 'www.oercommons.org', 'http://www.open.ac.uk/']
+    sites: ['en.wikipedia.org', 'open.ac.uk', 'oercommons.org','ck12.org']
 }, {type: 'videos', sites: ['khanacademy.org']}];
 
 function mediaKey(site2find) {
@@ -113,7 +118,8 @@ function renderVideoResult(results) {
 
 function renderResult(results) {
 
-    var resultSite = results.query.split(':')[1];
+    var resultSites = results.query.split(':');
+    var resultSite = resultSites[resultSites.length-1];
     var resultType = mediaKey(resultSite);
 
     switch (resultType) {
@@ -128,11 +134,9 @@ function renderResult(results) {
 
 function search(query) {
     media.forEach(function (medium) {
-        medium.sites.forEach(function (site) {
-            searchWebsite(query, site, function (res) {
-                renderResult(res);
-            })
-        });
+        searchForMedium(query, medium, function (res) {
+            renderResult(res);
+        })
     });
 }
 
