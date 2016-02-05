@@ -19,8 +19,8 @@ $(document).ready(function () {
     });
 });
 var invokeOnScreen = function () {
-    spawn('onscreen', []);
+    spawn('./onscreen', []);
 };
 var killOnScreen = function () {
-    spawn('kill_onscreen', []);
+    spawn('./kill_onscreen', []);
 };
