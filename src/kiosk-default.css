@@ -236,3 +236,6 @@ a:hover {
     line-height: 135%;
     padding-bottom: 10px;
 }
+.restricted-search{
+    color:red;
+}

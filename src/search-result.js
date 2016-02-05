@@ -1,7 +1,32 @@
 window.$ = window.jQuery = require('./jquery.js');
 
+var checkForBanWord = function (query) {
+    return query.split("+").filter(function(chunk) {
+            return banlist.hasOwnProperty(chunk)
+        }).length>0;
+};
+
+var manageRestrictedSearch = function () {
+    displaySearchResultMessage("No Result found for the search. Please try again");
+};
+
+var displaySearchResultMessage=function(message){
+    var container = $('#instant-answer');
+    container.find('.instant-answer__description').text(message);
+    container.removeClass('hidden')
+        .addClass('restricted-search')
+        .find('.instant-answer__readmore')
+        .addClass('hidden');
+    $('#text-result-container').addClass('hidden');
+    $('#video-result-container').addClass('hidden');
+}
+
 $(document).ready(function () {
     var query = window.location.search.substring(1).split('&')[0].split('=')[1];
+    if(checkForBanWord(query)){
+        manageRestrictedSearch();
+        return;
+    }
     getInstantAnswer(query);
     search(query);
 });
