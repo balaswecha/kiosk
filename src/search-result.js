@@ -71,6 +71,7 @@ function renderTextResult(results) {
     results.results.forEach(function (res) {
         renderTextElement(res);
     });
+    $('#text-loading').addClass('hidden');
 }
 
 function renderVideoResult(results) {
@@ -78,15 +79,14 @@ function renderVideoResult(results) {
     results.results.forEach(function (res) {
         renderVideoElement(res);
     });
+    $('#video-loading').addClass('hidden');
 }
 
 
 function renderResult(results) {
 
     var resultSite = results.query.split(':')[1];
-    console.log(resultSite);
     var resultType = mediaKey(resultSite);
-    console.log(resultType);
 
     switch (resultType) {
         case 'text':

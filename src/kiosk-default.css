@@ -164,7 +164,6 @@ a:hover {
     max-width: 200px;
     overflow-wrap: normal;
     float: left;
-    background-color: #f8f8f8;
     padding: 0 1rem;
 }
 
@@ -198,4 +197,10 @@ a:hover {
 .video-result-img {
     width: 150px;
     height: 100px;
+}
+
+.loading-img {
+    margin-left:calc(50% - 40px);
+    width:80px;
+    height:80px;
 }
