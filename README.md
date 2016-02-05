@@ -9,7 +9,7 @@ To clone and run this repository you'll need [Git](https://git-scm.com) and [Nod
 
 ```bash
 # Install node, npm, git and onboard ( for deb based distributions )
-$ sudo npm install nodejs nodejs-legacy npm git onboard
+$ sudo apt-get install nodejs nodejs-legacy npm git onboard
 
 # Clone this repository
 $ git clone https://github.com/balaswecha/kiosk
