@@ -48,7 +48,7 @@ function mediaKey(site2find) {
 var renderTextElement = function (res) {
     var textElement = "<div class='result-block'>" +
             "<a class='result-link' href='layout.html?q=" + res.url + "'>" +
-            "<img class = 'result-img' src=''/>" +
+            "<span class='result-title'>"+res.title+"</span>"+
             "<span class='result-description'>" + res.content + "</span>" +
             "</a>" +
             "</div>";

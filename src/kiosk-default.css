@@ -162,7 +162,6 @@ a:hover {
     display: inline;
     min-width: 200px;
     max-width: 200px;
-    overflow-wrap: normal;
     float: left;
     padding: 0 1rem;
 }
@@ -183,6 +182,7 @@ a:hover {
 .result-description {
     display: block;
     font-size: small;
+    line-height: 135%;
 }
 
 .result-link {
@@ -203,4 +203,12 @@ a:hover {
     margin-left:calc(50% - 40px);
     width:80px;
     height:80px;
+}
+
+.result-title{
+    font-size:small;
+    font-weight: bold;
+    display:block;
+    line-height: 135%;
+    padding-bottom: 10px;
 }
