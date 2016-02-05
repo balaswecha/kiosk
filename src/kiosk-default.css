@@ -219,8 +219,9 @@ a:hover {
 }
 
 .video-result-img {
-    width: 150px;
+    width: 100px;
     height: 100px;
+    margin-left:calc(50% - 50px);
 }
 
 .loading-img {

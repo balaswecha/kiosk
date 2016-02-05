@@ -87,7 +87,7 @@ var renderTextElement = function (res) {
 var renderVideoElement = function (res) {
     var textElement = "<div class='result-block'>" +
             "<a class='result-link' href='layout.html?q=" + res.url + "'>" +
-            "<img class = 'video-result-img'src=''/>" +
+            "<img class = 'video-result-img'src='images/video-player.png'/>" +
             "<span class='result-description'>" + res.title + "</span>" +
             "</a>" +
             "</div>";
