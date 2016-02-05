@@ -155,6 +155,7 @@ a:hover {
     box-sizing: border-box;
     cursor: pointer;
     opacity: .8;
+    -webkit-text-stroke: 1px #fff;
 }
 .result-stream-nav.result-stream-nav__right {
     right: 0;
