@@ -62,7 +62,10 @@ function searchWebsite(query, site, done) {
 }
 
 
-var media = [{type: 'text', sites: ['en.wikipedia.org']}, {type: 'videos', sites: ['khanacademy.org']}];
+var media = [{
+    type: 'text',
+    sites: ['www.ck12.org', 'en.wikipedia.org', 'www.oercommons.org', 'http://www.open.ac.uk/']
+}, {type: 'videos', sites: ['khanacademy.org']}];
 
 function mediaKey(site2find) {
     return media.filter(function (medium) {
@@ -73,7 +76,7 @@ function mediaKey(site2find) {
 var renderTextElement = function (res) {
     var textElement = "<div class='result-block'>" +
             "<a class='result-link' href='layout.html?q=" + res.url + "'>" +
-            "<span class='result-title'>"+res.title+"</span>"+
+            "<span class='result-title'>" + res.title + "</span>" +
             "<span class='result-description'>" + res.content + "</span>" +
             "</a>" +
             "</div>";
