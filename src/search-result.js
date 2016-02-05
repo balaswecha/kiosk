@@ -108,13 +108,13 @@ var renderTextElement = function (res) {
 
 
 var renderVideoElement = function (res) {
-    var textElement = "<div class='result-block'>" +
+    var videoElement = "<div class='result-block'>" +
             "<a class='result-link video-link' data-id='" + res.id.videoId + "' href='#'>" +
             "<img class = 'video-result-img'src='"+res.snippet.thumbnails.medium.url+"'/>" +
-            "<span class='result-description'>" + res.snippet.title + "</span>" +
+            "<span class='result-description video-result-description'>" + res.snippet.title + "</span>" +
             "</a>" +
             "</div>";
-    $('#video-result-stream').append(textElement);
+    $('#video-result-stream').append(videoElement);
 };
 
 $(document).on('click', '.video-link', function(e) {
@@ -187,7 +187,7 @@ $(document).on('click', '.result-stream-nav__left', function (e) {
 
 function scrollStream(resultStream, direction) {
     var totalWidth = resultStream.get(0).scrollWidth;
-    var boxWidth = 200;
+    var boxWidth = 270;
     var actualWidth = resultStream.width();
 
     var visibleNumberOfBoxes = Math.floor(actualWidth / boxWidth);
