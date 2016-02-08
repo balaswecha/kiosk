@@ -76,9 +76,9 @@ function searchForMedium(query, medium, done) {
         siteQuery+='site:'+site + (count==medium.sites.length?'':' OR ');
         count++;
     });
-    $.getJSON('https://searx.me/', {
+    $.getJSON('http://searx.in', {
         q: query  +' '+ siteQuery,
-        format: 'json'
+        format: 'json',
     }).then(function (res) {
         done(res);
     });
