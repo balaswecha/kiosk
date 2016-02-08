@@ -213,7 +213,7 @@ function scrollStream(resultStream, direction) {
     }
 }
 function showVideo(videoId) {
-    $('#video').attr('src', 'https://www.youtube.com/embed/' + videoId + '?autoplay=1');
+    $('#video').attr('src', 'https://www.youtube.com/embed/' + videoId + '?autoplay=1&iv_load_policy=3');
     showModal();
 }
 function showModal() {
@@ -221,6 +221,7 @@ function showModal() {
 }
 $(function() {
     $('#modal-backdrop').click(function(e){
+        $('#video').attr('src','');
         hideModal();
     });
     $('#modal').click(function(e){
