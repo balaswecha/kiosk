@@ -1,5 +1,22 @@
 window.$ = window.jQuery = require('./jquery.js');
 
+// Load the IFrame Player API code asynchronously.
+var tag = document.createElement('script');
+tag.src = "https://www.youtube.com/player_api";
+var firstScriptTag = document.getElementsByTagName('script')[0];
+firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+// Replace the 'ytplayer' element with an <iframe> and
+// YouTube player after the API code downloads.
+var player;
+
+function onYouTubePlayerAPIReady() {
+    player = new YT.Player('video-player', {
+        height: '600',
+        width: '800'
+    });
+}
+
 var checkForBanWord = function (query) {
     return query.split("+").filter(function(chunk) {
             return banlist.hasOwnProperty(chunk.toLowerCase())
@@ -213,7 +230,7 @@ function scrollStream(resultStream, direction) {
     }
 }
 function showVideo(videoId) {
-    $('#video').attr('src', 'https://www.youtube.com/embed/' + videoId + '?autoplay=1&iv_load_policy=3');
+    player.loadVideoById({videoId:videoId});
     showModal();
 }
 function showModal() {
@@ -221,7 +238,7 @@ function showModal() {
 }
 $(function() {
     $('#modal-backdrop').click(function(e){
-        $('#video').attr('src','');
+        player.stopVideo();
         hideModal();
     });
     $('#modal').click(function(e){

@@ -262,8 +262,12 @@ a:hover {
     text-align: center;
 }
 #modal {
-    max-width: 700px;
-    margin: 200px auto 0 auto;
+    max-width: 800px;
+    top: 50%;
+    position: fixed;
+    left: 50%;
+    transform: translate(-50%, -50%);
+
 }
 
 .video-result-description{
