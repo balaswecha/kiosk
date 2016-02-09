@@ -150,7 +150,7 @@ var renderVideoElement = function (res) {
 
 $(document).on('click', '.video-link', function(e) {
     e.preventDefault();
-    showVideo($(this).data('id'));
+    showVideoPlayer($(this).data('id'));
 });
 
 function renderTextResult(results) {
