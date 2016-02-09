@@ -15,6 +15,13 @@ function onYouTubePlayerAPIReady() {
         height: '600',
         width: '800'
     });
+    player.addEventListener('onStateChange', 'playerStateHandler');
+}
+
+function playerStateHandler(event) {
+    if (event.data == 0) {
+        setTimeout(function(){hideVideoPlayer()},400);
+    }
 }
 
 var checkForBanWord = function (query) {
@@ -47,6 +54,13 @@ $(document).ready(function () {
     getInstantAnswer(query);
     search(query);
     videoSearch(query);
+
+    $('#modal-backdrop').click(function (e) {
+        hideVideoPlayer();
+    });
+    $('#modal').click(function (e) {
+        e.stopPropagation();
+    });
 });
 
 function getInstantAnswer(query) {
@@ -229,22 +243,19 @@ function scrollStream(resultStream, direction) {
         rightNav.show();
     }
 }
-function showVideo(videoId) {
-    player.loadVideoById({videoId:videoId});
+function showVideoPlayer(videoId) {
+    player.loadVideoById({videoId: videoId});
     showModal();
+}
+
+function hideVideoPlayer(){
+    player.stopVideo();
+    hideModal();
 }
 function showModal() {
     $('#modal-backdrop').show();
 }
-$(function() {
-    $('#modal-backdrop').click(function(e){
-        player.stopVideo();
-        hideModal();
-    });
-    $('#modal').click(function(e){
-     e.stopPropagation();
-     });
-    function hideModal() {
-        $('#modal-backdrop').fadeOut();
-    }
-});
+
+function hideModal() {
+    $('#modal-backdrop').fadeOut();
+}
