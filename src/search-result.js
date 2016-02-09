@@ -124,7 +124,7 @@ function getSearchQuery(query) {
 
 function getApplicationSearchQuery(query) {
     return {
-        q: query + ' ' + 'site:phet.colorado.edu/en/simulation',
+        q: query + ' ' + 'site:phet.colorado.edu/sims/html',
         format: 'json'
     };
 }
@@ -166,11 +166,11 @@ var renderTextElement = function (res) {
     $('#text-result-stream').append(textElement);
 };
 
-var renderApplicationElement = function (res) {
+var renderApplicationElement = function (app) {
     var applicationElement = "<div class='result-block'>" +
-            "<a class='result-link' href='layout.html?src=" + res.url + "'>" +
-            "<span class='result-title'>" + res.title + "</span>" +
-            "<span class='result-description'>" + res.content + "</span>" +
+            "<a class='result-link application-link' href='layout.html?src=http://phet.colorado.edu/sims/html/" + app + "/latest/" + app + "_en.html'>" +
+            "<img class = 'video-result-img' src='http://phet.colorado.edu/sims/html/" + app + "/latest/" + app + "-600.png'/>" +
+            "<span class='result-description video-result-description'>" + app + "</span>" +
             "</a>" +
             "</div>";
     $('#application-result-stream').append(applicationElement);
@@ -204,8 +204,12 @@ function renderTextResult(results) {
 
 function renderApplicationResult(results) {
 
-    results.results.forEach(function (res) {
-        renderApplicationElement(res);
+    results.results.filter(function (res) {
+        var regex = /phet\.colorado\.edu\/sims\/html\/([a-z-]+)\/latest\/([a-z-]+)_en.html$/;
+        var regexResult = regex.exec(res.url);
+        if(regexResult) {
+            renderApplicationElement(regexResult[1]);
+        }
     });
     $('#application-loading').addClass('hidden');
     $('#application-result-left-nav').removeClass('hidden');
