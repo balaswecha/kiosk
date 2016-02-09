@@ -1,7 +1,7 @@
 window.$ = window.jQuery = require('./jquery.js');
 
 var noResultMessage = 'No Result found for the search. Please try again';
-var textSearchEngine = 'http://searx.bimorphic.in';
+var textSearchEngine = 'http://searx.bimorphic.com';
 
 
 $(document).ready(function () {
