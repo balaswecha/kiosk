@@ -82,7 +82,7 @@ function searchYouTube(query, channel, done) {
 
 var media = [{
     type: 'text',
-    sites: ['en.wikipedia.org', 'open.ac.uk', 'oercommons.org','ck12.org', 'howstuffworks.com']
+    sites: ['en.wikipedia.org', 'oercommons.org','ck12.org']
   }];
 var videoChannel = [
     "UCT7EcU7rC44DiS3RkfZzZMg", // AravindGupta
