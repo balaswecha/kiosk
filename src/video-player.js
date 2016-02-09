@@ -19,7 +19,8 @@ function onYouTubePlayerAPIReady() {
         height: '600',
         width: '800',
         playerVars: {
-            iv_load_policy: 3
+            iv_load_policy: 3,
+            rel: 0
         }
     });
     player.addEventListener('onStateChange', 'playerStateHandler');
