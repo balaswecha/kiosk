@@ -151,11 +151,11 @@ a:hover {
 .result-stream-nav {
     display: block;
     color: black;
-    font-size: 3em;
+    font-size: 6em;
     position: absolute;
     top: 0;
     height: 100%;
-    padding: 70px 10px 0 20px;
+    padding: 50px 10px 0 20px;
     box-sizing: border-box;
     cursor: pointer;
     opacity: .8;

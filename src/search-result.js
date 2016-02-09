@@ -2,6 +2,7 @@ window.$ = window.jQuery = require('./jquery.js');
 
 var noResultMessage = 'No Result found for the search. Please try again';
 var textSearchEngine = 'http://searx.bimorphic.com';
+var applicationSearchEngine = 'http://searx.bimorphic.com';
 
 
 $(document).ready(function () {
@@ -19,8 +20,8 @@ var getQueryParam = function () {
 
 var hasBanWords = function (query) {
     return query.split("+").filter(function (chunk) {
-            return banlist.hasOwnProperty(chunk.toLowerCase())
-        }).length > 0;
+                return banlist.hasOwnProperty(chunk.toLowerCase())
+            }).length > 0;
 };
 
 var manageRestrictedSearch = function () {
@@ -31,31 +32,39 @@ var search = function (queryToSearch) {
     summarySearch(queryToSearch);
     textSearch(queryToSearch);
     videoSearch(queryToSearch);
+    applicationSearch(queryToSearch);
 };
 
 var displayResultMessage = function (message) {
     var container = $('#instant-answer');
     container.find('.instant-answer__description').text(message);
     container.removeClass('hidden')
-        .addClass('restricted-search')
-        .find('.instant-answer__readmore')
-        .addClass('hidden');
+            .addClass('restricted-search')
+            .find('.instant-answer__readmore')
+            .addClass('hidden');
     $('#text-result-container').addClass('hidden');
     $('#video-result-container').addClass('hidden');
 };
 
-var summarySearch = function(query) {
+var summarySearch = function (query) {
     $.ajax(getQueryForSummarySearch(query))
-        .then(function (searchResult) {
-            renderSummaryResult(searchResult);
-        });
+            .then(function (searchResult) {
+                renderSummaryResult(searchResult);
+            });
 }
 
 var textSearch = function (query) {
     $.getJSON(textSearchEngine, getSearchQuery(query))
-        .then(function (searchResult) {
-            renderTextResult(searchResult);
-        });
+            .then(function (searchResult) {
+                renderTextResult(searchResult);
+            });
+};
+
+var applicationSearch = function (query) {
+    $.getJSON(applicationSearchEngine, getApplicationSearchQuery(query))
+            .then(function (searchResult) {
+                renderApplicationResult(searchResult);
+            });
 };
 
 var videoSearch = function (query) {
@@ -81,25 +90,25 @@ function renderSummaryResult(res) {
     if (res.AbstractText) {
         var container = $('#instant-answer');
         container
-            .find('.instant-answer__description')
-            .text(res.AbstractText);
+                .find('.instant-answer__description')
+                .text(res.AbstractText);
         container
-            .find('.instant-answer__image img')
-            .attr('src', res.Image);
+                .find('.instant-answer__image img')
+                .attr('src', res.Image);
         container
-            .find('.instant-answer__readmore')
-            .attr('href', res.AbstractURL).data('url', res.AbstractURL);
+                .find('.instant-answer__readmore')
+                .attr('href', res.AbstractURL).data('url', res.AbstractURL);
         container
-            .removeClass('hidden');
+                .removeClass('hidden');
     }
 }
 
-var getSitesForTextSearch = function() {
+var getSitesForTextSearch = function () {
     var siteQuery = '';
     var count = 1;
     textSearchSites.forEach(function (site) {
         siteQuery += 'site:' + site
-            + (count == textSearchSites.length ? '' : ' OR ');
+                + (count == textSearchSites.length ? '' : ' OR ');
         count++;
     });
     return siteQuery;
@@ -109,6 +118,13 @@ function getSearchQuery(query) {
     var siteToQuery = getSitesForTextSearch();
     return {
         q: query + ' ' + siteToQuery,
+        format: 'json'
+    };
+}
+
+function getApplicationSearchQuery(query) {
+    return {
+        q: query + ' ' + 'site:phet.colorado.edu/en/simulation',
         format: 'json'
     };
 }
@@ -125,7 +141,7 @@ function searchYouTube(query, channel, done) {
     });
 }
 
-var textSearchSites=  ['en.wikipedia.org', 'oercommons.org', 'ck12.org'];
+var textSearchSites = ['en.wikipedia.org', 'oercommons.org', 'ck12.org'];
 
 var videoChannel = [
     "UCT7EcU7rC44DiS3RkfZzZMg", // AravindGupta
@@ -142,22 +158,32 @@ function mediaKey(site2find) {
 
 var renderTextElement = function (res) {
     var textElement = "<div class='result-block'>" +
-        "<a class='result-link' href='layout.html?src=" + res.url + "'>" +
-        "<span class='result-title'>" + res.title + "</span>" +
-        "<span class='result-description'>" + res.content + "</span>" +
-        "</a>" +
-        "</div>";
+            "<a class='result-link' href='layout.html?src=" + res.url + "'>" +
+            "<span class='result-title'>" + res.title + "</span>" +
+            "<span class='result-description'>" + res.content + "</span>" +
+            "</a>" +
+            "</div>";
     $('#text-result-stream').append(textElement);
+};
+
+var renderApplicationElement = function (res) {
+    var applicationElement = "<div class='result-block'>" +
+            "<a class='result-link' href='layout.html?src=" + res.url + "'>" +
+            "<span class='result-title'>" + res.title + "</span>" +
+            "<span class='result-description'>" + res.content + "</span>" +
+            "</a>" +
+            "</div>";
+    $('#application-result-stream').append(applicationElement);
 };
 
 
 var renderVideoElement = function (res) {
     var videoElement = "<div class='result-block'>" +
-        "<a class='result-link video-link' data-id='" + res.id.videoId + "' href='#'>" +
-        "<img class = 'video-result-img'src='" + res.snippet.thumbnails.medium.url + "'/>" +
-        "<span class='result-description video-result-description'>" + res.snippet.title + "</span>" +
-        "</a>" +
-        "</div>";
+            "<a class='result-link video-link' data-id='" + res.id.videoId + "' href='#'>" +
+            "<img class = 'video-result-img'src='" + res.snippet.thumbnails.medium.url + "'/>" +
+            "<span class='result-description video-result-description'>" + res.snippet.title + "</span>" +
+            "</a>" +
+            "</div>";
     $('#video-result-stream').append(videoElement);
 };
 
@@ -174,6 +200,16 @@ function renderTextResult(results) {
     $('#text-loading').addClass('hidden');
     $('#text-result-left-nav').removeClass('hidden');
     $('#text-result-right-nav').removeClass('hidden');
+}
+
+function renderApplicationResult(results) {
+
+    results.results.forEach(function (res) {
+        renderApplicationElement(res);
+    });
+    $('#application-loading').addClass('hidden');
+    $('#application-result-left-nav').removeClass('hidden');
+    $('#application-result-right-nav').removeClass('hidden');
 }
 
 function renderVideoResult(results) {
