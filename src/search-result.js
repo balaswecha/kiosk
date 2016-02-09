@@ -166,11 +166,11 @@ var renderTextElement = function (res) {
     $('#text-result-stream').append(textElement);
 };
 
-var renderApplicationElement = function (app) {
+var renderApplicationElement = function (app, appName) {
     var applicationElement = "<div class='result-block'>" +
             "<a class='result-link application-link' href='layout.html?src=http://phet.colorado.edu/sims/html/" + app + "/latest/" + app + "_en.html'>" +
             "<img class = 'video-result-img' src='http://phet.colorado.edu/sims/html/" + app + "/latest/" + app + "-600.png'/>" +
-            "<span class='result-description video-result-description'>" + app + "</span>" +
+            "<span class='result-description video-result-description'>" + appName + "</span>" +
             "</a>" +
             "</div>";
     $('#application-result-stream').append(applicationElement);
@@ -208,7 +208,7 @@ function renderApplicationResult(results) {
         var regex = /phet\.colorado\.edu\/sims\/html\/([a-z-]+)\/latest\/([a-z-]+)_en.html$/;
         var regexResult = regex.exec(res.url);
         if(regexResult) {
-            renderApplicationElement(regexResult[1]);
+            renderApplicationElement(regexResult[1], res.title);
         }
     });
     $('#application-loading').addClass('hidden');
