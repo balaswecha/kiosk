@@ -28,7 +28,7 @@ var manageRestrictedSearch = function () {
 };
 
 var search = function (queryToSearch) {
-    getSummary(queryToSearch);
+    summarySearch(queryToSearch);
     textSearch(queryToSearch);
     videoSearch(queryToSearch);
 };
@@ -44,40 +44,18 @@ var displayResultMessage = function (message) {
     $('#video-result-container').addClass('hidden');
 };
 
-function getSummary(query) {
-    $.ajax({
-            url: 'http://api.duckduckgo.com',
-            data: {q: query, format: 'json'},
-            dataType: 'json',
-            beforeSend: function (xhr, settings) {
-                settings.url = settings.url.replace(/%2B/g, '%20')
-            }
-        })
-        .then(function (res) {
-            if (res.AbstractText) {
-                var container = $('#instant-answer');
-                container
-                    .find('.instant-answer__description')
-                    .text(res.AbstractText);
-                container
-                    .find('.instant-answer__image img')
-                    .attr('src', res.Image);
-                container
-                    .find('.instant-answer__readmore')
-                    .attr('href', res.AbstractURL).data('url', res.AbstractURL);
-                container
-                    .removeClass('hidden');
-            }
+var summarySearch = function(query) {
+    $.ajax(getQueryForSummarySearch(query))
+        .then(function (searchResult) {
+            renderSummaryResult(searchResult);
         });
 }
 
 var textSearch = function (query) {
-    media.forEach(function (medium) {
-        $.getJSON(textSearchEngine, getSearchQuery(medium, query))
-            .then(function (searchResult) {
-                renderResult(searchResult);
-            });
-    });
+    $.getJSON(textSearchEngine, getSearchQuery(query))
+        .then(function (searchResult) {
+            renderTextResult(searchResult);
+        });
 };
 
 var videoSearch = function (query) {
@@ -88,19 +66,47 @@ var videoSearch = function (query) {
     });
 };
 
-function getSitesToQuery(medium) {
+function getQueryForSummarySearch(query) {
+    return {
+        url: 'http://api.duckduckgo.com',
+        data: {q: query, format: 'json'},
+        dataType: 'json',
+        beforeSend: function (xhr, settings) {
+            settings.url = settings.url.replace(/%2B/g, '%20')
+        }
+    };
+}
+
+function renderSummaryResult(res) {
+    if (res.AbstractText) {
+        var container = $('#instant-answer');
+        container
+            .find('.instant-answer__description')
+            .text(res.AbstractText);
+        container
+            .find('.instant-answer__image img')
+            .attr('src', res.Image);
+        container
+            .find('.instant-answer__readmore')
+            .attr('href', res.AbstractURL).data('url', res.AbstractURL);
+        container
+            .removeClass('hidden');
+    }
+}
+
+var getSitesForTextSearch = function() {
     var siteQuery = '';
     var count = 1;
-    medium.sites.forEach(function (site) {
+    textSearchSites.forEach(function (site) {
         siteQuery += 'site:' + site
-            + (count == medium.sites.length ? '' : ' OR ');
+            + (count == textSearchSites.length ? '' : ' OR ');
         count++;
     });
     return siteQuery;
 }
 
-function getSearchQuery(medium, query) {
-    var siteToQuery = getSitesToQuery(medium);
+function getSearchQuery(query) {
+    var siteToQuery = getSitesForTextSearch();
     return {
         q: query + ' ' + siteToQuery,
         format: 'json'
@@ -119,10 +125,7 @@ function searchYouTube(query, channel, done) {
     });
 }
 
-var media = [{
-    type: 'text',
-    sites: ['en.wikipedia.org', 'oercommons.org', 'ck12.org']
-}];
+var textSearchSites=  ['en.wikipedia.org', 'oercommons.org', 'ck12.org'];
 
 var videoChannel = [
     "UCT7EcU7rC44DiS3RkfZzZMg", // AravindGupta
@@ -177,23 +180,6 @@ function renderVideoResult(results) {
         renderVideoElement(res);
     });
     $('#video-loading').addClass('hidden');
-}
-
-
-function renderResult(results) {
-
-    var resultSites = results.query.split(':');
-    var resultSite = resultSites[resultSites.length - 1];
-    var resultType = mediaKey(resultSite);
-
-    switch (resultType) {
-        case 'text':
-            renderTextResult(results);
-            break;
-        case 'videos':
-            renderVideoResult(results);
-            break;
-    }
 }
 
 $(document).on('click', '.instant-answer__readmore, .result-header', function (e) {
