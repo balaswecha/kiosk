@@ -172,6 +172,8 @@ function renderTextResult(results) {
         renderTextElement(res);
     });
     $('#text-loading').addClass('hidden');
+    $('#text-result-left-nav').removeClass('hidden');
+    $('#text-result-right-nav').removeClass('hidden');
 }
 
 function renderVideoResult(results) {
@@ -180,6 +182,8 @@ function renderVideoResult(results) {
         renderVideoElement(res);
     });
     $('#video-loading').addClass('hidden');
+    $('#video-result-left-nav').removeClass('hidden');
+    $('#video-result-right-nav').removeClass('hidden');
 }
 
 $(document).on('click', '.instant-answer__readmore, .result-header', function (e) {
