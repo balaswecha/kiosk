@@ -1,0 +1,21 @@
+check process privoxy with pidfile /var/run/privoxy.pid
+   group www
+   start program = "/etc/init.d/privoxy start"
+   stop  program = "/etc/init.d/privoxy stop"
+   if failed host localhost port 8118  then restart
+   depends on privoxy_bin
+   depends on privoxy_rc
+
+check file privoxy_bin with path /usr/sbin/privoxy
+   group www
+   if failed checksum then unmonitor
+   if failed permission 755 then unmonitor
+   if failed uid root then unmonitor
+   if failed gid root then unmonitor
+
+check file privoxy_rc with path /etc/init.d/privoxy
+   group www
+   if failed checksum then unmonitor
+   if failed permission 755 then unmonitor
+   if failed uid root then unmonitor
+   if failed gid root then unmonitor
