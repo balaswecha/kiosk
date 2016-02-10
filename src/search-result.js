@@ -91,15 +91,6 @@ AppSearcher.prototype.render = function (results) {
     $('#application-result-right-nav').removeClass('hidden');
 };
 
-function renderAppComponent(config, results) {
-    $(config.container).html(createResultStream(results.map(function (result) {
-        return "<div class='result-block'>" +
-                createBlock(createTitleImage(result.image), createContent(result.title), result.url) +
-                "</div>";
-    })));
-}
-
-
 function VideoSearcher(config) {
     this.engine = config.engine;
     this.channels = config.channels;
@@ -229,13 +220,14 @@ function scrollStream(resultStream, direction) {
 }
 
 function createResultStream(blocks) {
+    if(blocks.length == 0) return "";
     return blocks.reduce(function (memo, block) {
         return memo + block;
     });
 }
 
 function createBlock(title, content, url) {
-    return "<a class='result-link' href='layout.html?src=" + url + "'>" + title + content + "</a>";
+    return "<div class='result-block'><a class='result-link' href='layout.html?src=" + url + "'>" + title + content + "</a></div>";
 }
 
 function createBlockVideo(title, content, videoId) {
@@ -256,16 +248,17 @@ function createContent(content) {
 
 function renderTextComponent(config, results) {
     $(config.container).html(createResultStream(results.map(function (result) {
-        return "<div class='result-block'>" +
-                createBlock(createTitleText(result.title), createContent(result.content), result.url) +
-                "</div>";
+        return createBlock(createTitleText(result.title), createContent(result.content), result.url);
+    })));
+}
+function renderAppComponent(config, results) {
+    $(config.container).html(createResultStream(results.map(function (result) {
+        return createBlock(createTitleImage(result.image), createContent(result.title), result.url);
     })));
 }
 
 function renderVideoComponent(config, results) {
     $(config.container).append(createResultStream(results.map(function (result) {
-        return "<div class='result-block'>" +
-                createBlockVideo(createTitleImage(result.snippet.thumbnails.medium.url), createContent(result.snippet.title), result.id.videoId) +
-                "</div>";
+        return createBlockVideo(createTitleImage(result.snippet.thumbnails.medium.url), createContent(result.snippet.title), result.id.videoId);
     })));
 }
