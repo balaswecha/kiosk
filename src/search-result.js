@@ -1,18 +1,7 @@
+var config = require('./config.js');
 window.$ = window.jQuery = require('./jquery.js');
 
 var noResultMessage = 'No Result found for the search. Please try again';
-var textSearchEngine = 'http://searx.bimorphic.com';
-var applicationSearchEngine = 'http://searx.bimorphic.com';
-
-
-$(document).ready(function () {
-    var query = getQueryParam();
-    if (hasBanWords(query)) {
-        manageRestrictedSearch();
-    } else {
-        search(query);
-    }
-});
 
 var getQueryParam = function () {
     return window.location.search.substring(1).split('&')[0].split('=')[1];
@@ -23,16 +12,163 @@ var hasBanWords = function (query) {
                 return banlist.hasOwnProperty(chunk.toLowerCase())
             }).length > 0;
 };
-
 var manageRestrictedSearch = function () {
     displayResultMessage(noResultMessage);
 };
 
-var search = function (queryToSearch) {
-    summarySearch(queryToSearch);
-    textSearch(queryToSearch);
-    videoSearch(queryToSearch);
-    applicationSearch(queryToSearch);
+$(document).ready(function () {
+    var query = getQueryParam();
+    if (hasBanWords(query)) {
+        manageRestrictedSearch();
+    } else {
+        search(query);
+    }
+});
+
+function TextSearcher(config) {
+    this.engine = config.engine;
+    this.sites = config.sites;
+}
+TextSearcher.prototype.search = function (query) {
+    var siteQuery = this.sites.reduce(function (memo, site) {
+        return memo + ' OR site:' + site
+    });
+    query = query + 'site:' + siteQuery;
+    $.getJSON(this.engine, {
+                q: query,
+                format: 'json'
+            })
+            .then(function (results) {
+                this.render(results);
+            }.bind(this));
+};
+TextSearcher.prototype.render = function (results) {
+    renderTextComponent({container: '#text-result-stream'}, results.results);
+
+    $('#text-loading').addClass('hidden');
+    $('#text-result-left-nav').removeClass('hidden');
+    $('#text-result-right-nav').removeClass('hidden');
+};
+
+function AppSearcher(config) {
+    this.engine = config.engine;
+    this.sites = config.sites;
+}
+
+AppSearcher.prototype.search = function (query) {
+    var siteQuery = this.sites.reduce(function (memo, site) {
+        return memo + ' OR site:' + site
+    });
+    query = query + 'site:' + siteQuery;
+    $.getJSON(this.engine, {
+                q: query,
+                format: 'json'
+            })
+            .then(function (results) {
+                this.render(results);
+            }.bind(this));
+};
+
+function parseAppSearchResult(results) {
+    var filteredResults = results.results.filter(function (res) {
+        var regex = /phet\.colorado\.edu\/sims\/html\/([a-z-]+)\/latest\/([a-z-]+)_en.html$/;
+        var regexResult = regex.exec(res.url);
+        if (regexResult) {
+            res.url = "http://phet.colorado.edu/sims/html/" + regexResult[1] + "/latest/" + regexResult[1] + "_en.html";
+            res.image = "http://phet.colorado.edu/sims/html/" + regexResult[1] + "/latest/" + regexResult[1] + "-600.png";
+        }
+        return regexResult;
+
+    });
+    return filteredResults;
+}
+AppSearcher.prototype.render = function (results) {
+
+    renderAppComponent({container:'#application-result-stream'},parseAppSearchResult(results));
+
+    $('#application-loading').addClass('hidden');
+    $('#application-result-left-nav').removeClass('hidden');
+    $('#application-result-right-nav').removeClass('hidden');
+};
+
+function renderAppComponent(config, results) {
+    $(config.container).html(createResultStream(results.map(function (result) {
+        return "<div class='result-block'>" +
+                createBlock(createTitleImage(result.image), createContent(result.title), result.url) +
+                "</div>";
+    })));
+}
+
+
+function VideoSearcher(config) {
+    this.engine = config.engine;
+    this.channels = config.channels;
+    this.key = config.key;
+    this.safeSearch = 'strict';
+    this.part = 'snippet';
+}
+VideoSearcher.prototype.search = function (query) {
+    var that = this;
+    this.channels.forEach(function (channel) {
+        $.getJSON(that.engine, {
+            part: that.part,
+            channelId: channel,
+            q: query,
+            safeSearch: that.safeSearch,
+            key: that.key,
+            format: 'json'
+        }).then(function (res) {
+            that.render(res);
+        });
+    });
+
+};
+VideoSearcher.prototype.render = function (results) {
+    renderVideoComponent({container: '#video-result-stream'}, results.items);
+
+    $('#video-loading').addClass('hidden');
+    $('#video-result-left-nav').removeClass('hidden');
+    $('#video-result-right-nav').removeClass('hidden');
+};
+
+function SummarySearcher(config) {
+    this.engine = config.engine;
+}
+SummarySearcher.prototype.search = function (query) {
+    $.ajax({
+                url: this.engine,
+                data: {q: query, format: 'json'},
+                dataType: 'json',
+                beforeSend: function (xhr, settings) {
+                    settings.url = settings.url.replace(/%2B/g, '%20')
+                }
+            })
+            .then(this.render.bind(this));
+};
+SummarySearcher.prototype.render = function (result) {
+    if (result.AbstractText) {
+        var container = $('#instant-answer');
+        container.find('.instant-answer__description')
+                .text(result.AbstractText);
+        container.find('.instant-answer__image img')
+                .attr('src', result.Image);
+        container.find('.instant-answer__readmore')
+                .attr('href', result.AbstractURL).data('url', result.AbstractURL);
+        container.removeClass('hidden');
+    }
+};
+
+var search = function (query) {
+    var searchers = [
+
+        new SummarySearcher(config.summary),
+        new TextSearcher(config.text),
+        new VideoSearcher(config.videos),
+        new AppSearcher(config.apps)
+    ];
+    searchers.forEach(function (searcher, renderer) {
+        searcher.search(query);
+    });
 };
 
 var displayResultMessage = function (message) {
@@ -46,191 +182,15 @@ var displayResultMessage = function (message) {
     $('#video-result-container').addClass('hidden');
 };
 
-var summarySearch = function (query) {
-    $.ajax(getQueryForSummarySearch(query))
-            .then(function (searchResult) {
-                renderSummaryResult(searchResult);
-            });
-}
 
-var textSearch = function (query) {
-    $.getJSON(textSearchEngine, getSearchQuery(query))
-            .then(function (searchResult) {
-                renderTextResult(searchResult);
-            });
-};
-
-var applicationSearch = function (query) {
-    $.getJSON(applicationSearchEngine, getApplicationSearchQuery(query))
-            .then(function (searchResult) {
-                renderApplicationResult(searchResult);
-            });
-};
-
-var videoSearch = function (query) {
-    videoChannel.forEach(function (channel) {
-        searchYouTube(query, channel, function (res) {
-            renderVideoResult(res);
-        });
-    });
-};
-
-function getQueryForSummarySearch(query) {
-    return {
-        url: 'http://api.duckduckgo.com',
-        data: {q: query, format: 'json'},
-        dataType: 'json',
-        beforeSend: function (xhr, settings) {
-            settings.url = settings.url.replace(/%2B/g, '%20')
-        }
-    };
-}
-
-function renderSummaryResult(res) {
-    if (res.AbstractText) {
-        var container = $('#instant-answer');
-        container
-                .find('.instant-answer__description')
-                .text(res.AbstractText);
-        container
-                .find('.instant-answer__image img')
-                .attr('src', res.Image);
-        container
-                .find('.instant-answer__readmore')
-                .attr('href', res.AbstractURL).data('url', res.AbstractURL);
-        container
-                .removeClass('hidden');
-    }
-}
-
-var getSitesForTextSearch = function () {
-    var siteQuery = '';
-    var count = 1;
-    textSearchSites.forEach(function (site) {
-        siteQuery += 'site:' + site
-                + (count == textSearchSites.length ? '' : ' OR ');
-        count++;
-    });
-    return siteQuery;
-}
-
-function getSearchQuery(query) {
-    var siteToQuery = getSitesForTextSearch();
-    return {
-        q: query + ' ' + siteToQuery,
-        format: 'json'
-    };
-}
-
-function getApplicationSearchQuery(query) {
-    return {
-        q: query + ' ' + 'site:phet.colorado.edu/sims/html',
-        format: 'json'
-    };
-}
-
-function searchYouTube(query, channel, done) {
-    $.getJSON('https://www.googleapis.com/youtube/v3/search', {
-        part: "snippet",
-        channelId: channel,
-        q: query,
-        safeSearch: "strict",
-        key: "AIzaSyBQuBZQy0X_0g-D5bH5MC8Rg2bocnoLolI",
-    }).then(function (res) {
-        done(res);
-    });
-}
-
-var textSearchSites = ['en.wikipedia.org', 'oercommons.org', 'ck12.org'];
-
-var videoChannel = [
-    "UCT7EcU7rC44DiS3RkfZzZMg", // AravindGupta
-    "UC4a-Gbdw7vOaccHmFo40b9g", // KhanAcademy
-    "UCT0s92hGjqLX6p7qY9BBrSA", // NCERT
-    "UCFe6jenM1Bc54qtBsIJGRZQ" // PatrickMT
-];
-
-function mediaKey(site2find) {
-    return media.filter(function (medium) {
-        return medium.sites.indexOf(site2find) !== -1;
-    })[0].type;
-}
-
-var renderTextElement = function (res) {
-    var textElement = "<div class='result-block'>" +
-            "<a class='result-link' href='layout.html?src=" + res.url + "'>" +
-            "<span class='result-title'>" + res.title + "</span>" +
-            "<span class='result-description'>" + res.content + "</span>" +
-            "</a>" +
-            "</div>";
-    $('#text-result-stream').append(textElement);
-};
-
-var renderApplicationElement = function (app, appName) {
-    var applicationElement = "<div class='result-block'>" +
-            "<a class='result-link application-link' href='layout.html?src=http://phet.colorado.edu/sims/html/" + app + "/latest/" + app + "_en.html'>" +
-            "<img class = 'video-result-img' src='http://phet.colorado.edu/sims/html/" + app + "/latest/" + app + "-600.png'/>" +
-            "<span class='result-description video-result-description'>" + appName + "</span>" +
-            "</a>" +
-            "</div>";
-    $('#application-result-stream').append(applicationElement);
-};
-
-
-var renderVideoElement = function (res) {
-    var videoElement = "<div class='result-block'>" +
-            "<a class='result-link video-link' data-id='" + res.id.videoId + "' href='#'>" +
-            "<img class = 'video-result-img'src='" + res.snippet.thumbnails.medium.url + "'/>" +
-            "<span class='result-description video-result-description'>" + res.snippet.title + "</span>" +
-            "</a>" +
-            "</div>";
-    $('#video-result-stream').append(videoElement);
-};
-
-$(document).on('click', '.video-link', function (e) {
-    e.preventDefault();
-    showVideoPlayer($(this).data('id'));
-});
-
-function renderTextResult(results) {
-
-    results.results.forEach(function (res) {
-        renderTextElement(res);
-    });
-    $('#text-loading').addClass('hidden');
-    $('#text-result-left-nav').removeClass('hidden');
-    $('#text-result-right-nav').removeClass('hidden');
-}
-
-function renderApplicationResult(results) {
-
-    results.results.filter(function (res) {
-        var regex = /phet\.colorado\.edu\/sims\/html\/([a-z-]+)\/latest\/([a-z-]+)_en.html$/;
-        var regexResult = regex.exec(res.url);
-        if(regexResult) {
-            renderApplicationElement(regexResult[1], res.title);
-        }
-    });
-    $('#application-loading').addClass('hidden');
-    $('#application-result-left-nav').removeClass('hidden');
-    $('#application-result-right-nav').removeClass('hidden');
-}
-
-function renderVideoResult(results) {
-
-    results.items.forEach(function (res) {
-        renderVideoElement(res);
-    });
-    $('#video-loading').addClass('hidden');
-    $('#video-result-left-nav').removeClass('hidden');
-    $('#video-result-right-nav').removeClass('hidden');
-}
-
+// Don't follow links, but show them in layout.html
 $(document).on('click', '.instant-answer__readmore, .result-header', function (e) {
     e.preventDefault();
     window.location = "layout.html?q=" + $(this).data('url');
 });
 
+
+// Scrolling
 $(document).on('click', '.result-stream-nav__right', function (e) {
     e.preventDefault();
     scrollStream($(this).siblings('.result-stream'), 'right');
@@ -266,4 +226,46 @@ function scrollStream(resultStream, direction) {
     } else {
         rightNav.show();
     }
+}
+
+function createResultStream(blocks) {
+    return blocks.reduce(function (memo, block) {
+        return memo + block;
+    });
+}
+
+function createBlock(title, content, url) {
+    return "<a class='result-link' href='layout.html?src=" + url + "'>" + title + content + "</a>";
+}
+
+function createBlockVideo(title, content, videoId) {
+    return "<a class='result-link video-link' data-id='" + videoId + "' href='#'>" + title + content + "</a>";
+}
+
+function createTitleText(title) {
+    return "<span class='result-title'>" + title + "</span>";
+}
+
+function createTitleImage(src) {
+    return "<img class = 'video-result-img' src='" + src + "'/>";
+}
+
+function createContent(content) {
+    return "<span class='result-description'>" + content + "</span>";
+}
+
+function renderTextComponent(config, results) {
+    $(config.container).html(createResultStream(results.map(function (result) {
+        return "<div class='result-block'>" +
+                createBlock(createTitleText(result.title), createContent(result.content), result.url) +
+                "</div>";
+    })));
+}
+
+function renderVideoComponent(config, results) {
+    $(config.container).append(createResultStream(results.map(function (result) {
+        return "<div class='result-block'>" +
+                createBlockVideo(createTitleImage(result.snippet.thumbnails.medium.url), createContent(result.snippet.title), result.id.videoId) +
+                "</div>";
+    })));
 }

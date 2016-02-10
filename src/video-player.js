@@ -6,6 +6,10 @@ $(function () {
         e.stopPropagation();
     });
 });
+$(document).on('click', '.video-link', function (e) {
+    e.preventDefault();
+    showVideoPlayer($(this).data('id'));
+});
 
 var tag = document.createElement('script');
 tag.src = "https://www.youtube.com/iframe_api";
