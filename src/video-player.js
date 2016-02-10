@@ -8,19 +8,21 @@ $(function () {
 });
 
 var tag = document.createElement('script');
-tag.src = "https://www.youtube.com/player_api";
+tag.src = "https://www.youtube.com/iframe_api";
 var firstScriptTag = document.getElementsByTagName('script')[0];
 firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
 
 var player;
 
-function onYouTubePlayerAPIReady() {
+function onYouTubeIframeAPIReady() {
     player = new YT.Player('video-player', {
         height: '600',
         width: '800',
         playerVars: {
             iv_load_policy: 3,
-            rel: 0
+            modestbranding: 1,
+            rel: 0,
+            showinfo: 0
         }
     });
     player.addEventListener('onStateChange', 'playerStateHandler');
@@ -46,6 +48,7 @@ function hideVideoPlayer() {
 
 function showModal() {
     $('#modal-backdrop').show();
+    $('iframe').contents().find('.ytp-watermark').remove();
 }
 
 function hideModal() {
