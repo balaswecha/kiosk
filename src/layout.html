@@ -15,7 +15,7 @@
         <input class="btn btn--search" type="submit" value="Learn!"/>
     </form>
 </div>
-<webview id="webview" class="webview"></webview>
+<webview id="webview" class="webview" preload="./main.js"></webview>
 <script>
     window.$ = window.jQuery = require('./jquery.js');
     var encodedURI = window.location.search.substring(1).split('&')[0].split('=')[1];
