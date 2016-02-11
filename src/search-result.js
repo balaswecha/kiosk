@@ -171,6 +171,7 @@ var displayResultMessage = function (message) {
             .addClass('hidden');
     $('#text-result-container').addClass('hidden');
     $('#video-result-container').addClass('hidden');
+    $('#application-result-container').addClass('hidden');
 };
 
 
