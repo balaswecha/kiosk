@@ -24,7 +24,14 @@
 
     var wv = document.getElementById('webview');
     wv.addEventListener('did-finish-load',function(){
-        wv.executeJavaScript("$('a').each(function(idx,link){if(link.href.match(/youtube\.com/)!==null) {console.log($(link).text());$(link).contents().unwrap();}});");
+        wv.executeJavaScript("$('a').each(function(idx,link){" +
+            "if(link.href.match(/youtube\.com/)!==null) {" +
+                "$(link).contents().unwrap();" +
+            "}" +
+            "if(link.href.match(/duckduckgo\.com/)!==null) {" +
+                "$(link).contents().unwrap();" +
+            "}" +
+         "});");
     });
 
     $('#back').click(function(e) {
