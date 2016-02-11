@@ -232,7 +232,7 @@ function createBlock(title, content, url) {
 }
 
 function createBlockVideo(title, content, videoId) {
-    return "<a class='result-link video-link' data-id='" + videoId + "' href='#'>" + title + content + "</a>";
+    return "<a class='result-link result-block video-link' data-id='" + videoId + "' href='#'>" + title + content + "</a>";
 }
 
 function createTitleText(title) {

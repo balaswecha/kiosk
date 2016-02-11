@@ -1,7 +1,7 @@
 module.exports = {
     text: {
         engine: "http://searx.bimorphic.com",
-        sites: ["en.wikipedia.org", "oercommons.org", "ck12.org"]
+        sites: ["en.wikipedia.org"]
     },
     apps: {
         engine: "http://searx.bimorphic.com",

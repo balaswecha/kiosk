@@ -196,6 +196,7 @@ a:hover {
     padding: 0 1rem;
     margin-right:20px;
     border:1px solid #ddd;
+    word-wrap: break-word;
 }
 
 .result-container-header-text {

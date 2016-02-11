@@ -53,6 +53,7 @@ function hideVideoPlayer() {
 function showModal() {
     $('#modal-backdrop').show();
     $('iframe').contents().find('.ytp-watermark').remove();
+    $('iframe').contents().find('.ytp-title').remove();
 }
 
 function hideModal() {
