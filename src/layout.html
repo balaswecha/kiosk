@@ -22,6 +22,10 @@
     var decodedURI = decodeURIComponent(encodedURI);
     $('#webview').attr('src',decodedURI);
 
+    var wv = document.getElementById('webview');
+    wv.addEventListener('did-finish-load',function(){
+        wv.executeJavaScript("$('a').each(function(idx,link){if(link.href.match(/youtube\.com/)!==null) {console.log($(link).text());$(link).contents().unwrap();}});");
+    });
 
     $('#back').click(function(e) {
         e.preventDefault();
