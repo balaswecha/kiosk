@@ -1,10 +1,10 @@
 module.exports = {
     text: {
-        engine: "http://searx.bimorphic.com",
+        engine: "https://searx.bimorphic.com",
         sites: ["en.wikipedia.org", "oercommons.org", "ck12.org", "howstuffworks.com", "open.ac.uk"]
     },
     apps: {
-        engine: "http://searx.bimorphic.com",
+        engine: "https://searx.bimorphic.com",
         sites: ["phet.colorado.edu/sims/html"]
     },
     videos: {
@@ -18,6 +18,6 @@ module.exports = {
         ]
     },
     summary: {
-        engine: 'http://api.duckduckgo.com'
+        engine: 'https://api.duckduckgo.com'
     }
 };
