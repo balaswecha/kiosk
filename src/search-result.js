@@ -33,17 +33,21 @@ TextSearcher.prototype.search = function (query) {
     var siteQuery = this.sites.reduce(function (memo, site) {
         return memo + ' OR site:' + site
     });
-    query = query + 'site:' + siteQuery;
-    $.getJSON(this.engine, {
-                q: query,
-                format: 'json'
+    query = query + ' site:' + siteQuery;
+    $.ajax({
+                url: this.engine,
+                data: {q: query, format: 'json'},
+                dataType: 'json',
+                beforeSend: function (xhr, settings) {
+                    settings.url = settings.url.replace(/%2B/g, '%20')
+                }
             })
-            .then(function (results) {
-                this.render(results);
-            }.bind(this));
+            .then(this.render.bind(this));
 };
 TextSearcher.prototype.render = function (results) {
-    renderTextComponent({container: '#text-result-stream'}, results.results);
+    renderTextComponent({container: '#text-result-stream'}, results.results.filter(function (r) {
+        return r.engine !== 'bing';
+    }));
 
     $('#text-loading').addClass('hidden');
     $('#text-result-left-nav').removeClass('hidden');
@@ -60,13 +64,15 @@ AppSearcher.prototype.search = function (query) {
         return memo + ' OR site:' + site
     });
     query = query + 'site:' + siteQuery;
-    $.getJSON(this.engine, {
-                q: query,
-                format: 'json'
+    $.ajax({
+                url: this.engine,
+                data: {q: query, format: 'json'},
+                dataType: 'json',
+                beforeSend: function (xhr, settings) {
+                    settings.url = settings.url.replace(/%2B/g, '%20')
+                }
             })
-            .then(function (results) {
-                this.render(results);
-            }.bind(this));
+            .then(this.render.bind(this));
 };
 
 function parseAppSearchResult(results) {
@@ -84,7 +90,7 @@ function parseAppSearchResult(results) {
 }
 AppSearcher.prototype.render = function (results) {
 
-    renderAppComponent({container:'#application-result-stream'},parseAppSearchResult(results));
+    renderAppComponent({container: '#application-result-stream'}, parseAppSearchResult(results));
 
     $('#application-loading').addClass('hidden');
     $('#application-result-left-nav').removeClass('hidden');
@@ -221,14 +227,14 @@ function scrollStream(resultStream, direction) {
 }
 
 function createResultStream(blocks) {
-    if(blocks.length == 0) return "";
+    if (blocks.length == 0) return "";
     return blocks.reduce(function (memo, block) {
         return memo + block;
     });
 }
 
 function createBlock(title, content, url) {
-    return "<div class='result-block'><a class='result-link' href='layout.html?src=" + url + "'>" + title + content + "</a></div>";
+    return "<div class='result-block'><a class='result-link' href='layout.html?src=" + encodeURIComponent(url) + "'>" + title + content + "</a></div>";
 }
 
 function createBlockVideo(title, content, videoId) {

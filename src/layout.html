@@ -18,7 +18,7 @@
 <webview id="webview" class="webview" preload="./main.js"></webview>
 <script>
     window.$ = window.jQuery = require('./jquery.js');
-    var encodedURI = window.location.search.substring(1).split('&')[0].split('=')[1];
+    var encodedURI = window.location.search.substring(1).split('&')[0].split('src=')[1];
     var decodedURI = decodeURIComponent(encodedURI);
     $('#webview').attr('src',decodedURI);
 
