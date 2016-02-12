@@ -24,3 +24,9 @@ var invokeOnScreen = function () {
 var killOnScreen = function () {
     spawn('./kill_onscreen', []);
 };
+
+var remote = require('electron').remote;
+var Menu = remote.Menu;
+
+var menu = new Menu();
+Menu.setApplicationMenu(menu);
