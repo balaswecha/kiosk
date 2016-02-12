@@ -7,4 +7,5 @@ gsettings set org.gnome.system.proxy.https port 8118
 gsettings set org.gnome.system.proxy ignore-hosts "[]"
 resx=`xdpyinfo  | grep dimensions| grep -o " [0-9]\+x[0-9]\+ " | grep -o "[0-9]\+"| head -n 1`
 resy=`xdpyinfo  | grep dimensions| grep -o " [0-9]\+x[0-9]\+ " | grep -o "[0-9]\+"| head -n 2| tail -n 1`
+cd /opt/kiosk
 electron main.js $resx $resy
